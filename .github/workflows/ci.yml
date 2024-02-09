@@ -39,6 +39,8 @@ jobs:
         run: npm ci
       - name: Lint project using eslint
         run: npm run lint
+      - name: Build package
+        run: npm run build
       - name: Lint package using publint
         run: npx publint --strict
 

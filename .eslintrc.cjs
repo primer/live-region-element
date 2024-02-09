@@ -33,7 +33,17 @@ const config = {
         argsIgnorePattern: '^_',
       },
     ],
+    'import/no-unresolved': 'off',
   },
+  overrides: [
+    {
+      files: ['*.test.ts'],
+      rules: {
+        'github/no-inner-html': 'off',
+        'i18n-text/no-en': 'off',
+      },
+    },
+  ],
 }
 
 module.exports = config
