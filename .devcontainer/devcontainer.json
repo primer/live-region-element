@@ -1,0 +1,17 @@
+{
+  "name": "Primer Live Region Element",
+  "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:20",
+  "forwardPorts": [],
+  "onCreateCommand": ["/bin/bash", "-c", "npm i"],
+  "remoteUser": "node",
+  "features": {
+    "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
+    }
+  },
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  }
+}

@@ -1,0 +1,11 @@
+# Dependency folders
+node_modules
+
+# Package build folders
+dist
+
+# custom-elements-manifest
+custome-elements.json
+
+# TypeScript
+*.tsbuildinfo
