@@ -29,6 +29,7 @@ announce('Example message')
 ```
 
 Each method also supports specifying the politeness level of the announcement through the `politeness` option.
+By default, announcements will be `polite`.
 
 ```ts
 const liveRegion = document.querySelector('live-region')
@@ -42,7 +43,9 @@ liveRegion.announce('Example assertive message', {
 })
 ```
 
-It is **essential** that the `live-region` element exists in the initial HTML payload of your application. To do so, include `<live-region></live-region>` in your HTML and make sure that [the custom element has been defined](#defining-live-region-as-a-custom-element). Follow the [Declarative shadow DOM](#declarative-shadow-dom) section below if you would like to include this in your HTML.
+It is **essential** that the `live-region` element exists in the initial HTML payload of your application. Having multiple live regions on a page is discouraged so we recommend having a single global live region that is available across every page of your application by embedding this `live-region` element as part of your page layout.
+
+To do so, include `<live-region></live-region>` in your HTML and make sure that [the custom element has been defined](#defining-live-region-as-a-custom-element). Follow the [Declarative shadow DOM](#declarative-shadow-dom) section below if you would like to include this in your HTML.
 
 ### Defining `live-region` as a custom element
 
