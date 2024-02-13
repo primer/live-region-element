@@ -1,0 +1,59 @@
+{
+  "name": "@primer/live-region-element",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/esm/index.d.ts",
+        "require": "./dist/cjs/index.d.ts"
+      },
+      "node": {
+        "import": "./dist/esm/node/index.js",
+        "require": "./dist/cjs/node/index.cjs"
+      },
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs"
+    },
+    "./define": {
+      "types": {
+        "import": "./dist/esm/define.d.ts",
+        "require": "./dist/cjs/define.d.ts"
+      },
+      "node": {
+        "import": "./dist/esm/node/define.js",
+        "require": "./dist/cjs/node/define.cjs"
+      },
+      "import": "./dist/esm/define.js",
+      "require": "./dist/cjs/define.cjs"
+    }
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "rollup -c",
+    "lint:npm": "publint --strict",
+    "type-check": "tsc --noEmit",
+    "watch": "rollup -c --watch"
+  },
+  "license": "MIT",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "dependencies": {
+    "@lit-labs/ssr-dom-shim": "^1.2.0"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.9.0",
+    "@rollup/plugin-inject": "^5.0.5",
+    "@rollup/plugin-replace": "^5.0.5",
+    "jsdom": "^24.0.0",
+    "publint": "^0.2.7",
+    "rimraf": "^5.0.5",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.3.3"
+  }
+}

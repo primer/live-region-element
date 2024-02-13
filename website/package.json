@@ -1,0 +1,23 @@
+{
+  "name": "website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf .next",
+    "build": "next build",
+    "develop": "next",
+    "type-check": "npx tsc --noEmit"
+  },
+  "dependencies": {
+    "@primer/live-region-element": "^0.1.0",
+    "next": "^14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "@types/react": "^18.2.55",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  }
+}

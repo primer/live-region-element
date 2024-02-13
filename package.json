@@ -1,67 +1,29 @@
 {
-  "name": "@primer/live-region-element",
+  "name": "live-region",
   "private": true,
-  "version": "0.1.0",
   "type": "module",
-  "exports": {
-    ".": {
-      "types": {
-        "import": "./dist/esm/index.d.ts",
-        "require": "./dist/cjs/index.d.ts"
-      },
-      "node": {
-        "import": "./dist/esm/node/index.js",
-        "require": "./dist/cjs/node/index.cjs"
-      },
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.cjs"
-    },
-    "./define": {
-      "types": {
-        "import": "./dist/esm/define.d.ts",
-        "require": "./dist/cjs/define.d.ts"
-      },
-      "node": {
-        "import": "./dist/esm/node/define.js",
-        "require": "./dist/cjs/node/define.cjs"
-      },
-      "import": "./dist/esm/define.js",
-      "require": "./dist/cjs/define.cjs"
-    }
-  },
+  "workspaces": [
+    "packages/*",
+    "website"
+  ],
   "scripts": {
-    "clean": "rimraf dist",
-    "build": "rollup -c",
+    "clean": "npm run clean -ws --if-present",
+    "clean:all": "npm run clean -ws --if-present && rimraf node_modules packages/*/node_modules website/node_modules",
+    "build": "npm run build -ws --if-present",
     "format": "prettier --cache --write '**/*.{js,css,md,mdx,ts,tsx,yml}'",
     "format:diff": "prettier --cache --list-different '**/*.{js,css,md,mdx,ts,tsx,yml}'",
     "lint": "eslint .",
     "test": "vitest",
-    "type-check": "tsc --noEmit"
-  },
-  "license": "MIT",
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md"
-  ],
-  "dependencies": {
-    "@lit-labs/ssr-dom-shim": "^1.2.0"
+    "type-check": "npm run type-check -ws --if-present"
   },
   "devDependencies": {
-    "@custom-elements-manifest/analyzer": "^0.9.0",
     "@github/prettier-config": "^0.0.6",
-    "@rollup/plugin-inject": "^5.0.5",
-    "@rollup/plugin-replace": "^5.0.5",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.56.0",
     "eslint-plugin-github": "^4.10.1",
-    "jsdom": "^24.0.0",
     "prettier": "^3.2.5",
-    "publint": "^0.2.7",
     "rimraf": "^5.0.5",
-    "rollup-plugin-esbuild": "^6.1.1",
-    "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "^5.3.3",
     "vitest": "^1.2.2",
     "vitest-dom": "^0.1.1"

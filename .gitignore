@@ -9,3 +9,6 @@ custome-elements.json
 
 # TypeScript
 *.tsbuildinfo
+
+# Next.js
+.next

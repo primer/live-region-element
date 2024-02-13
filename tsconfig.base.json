@@ -27,5 +27,7 @@
 
     "types": ["vitest-dom/extend-expect"]
   },
-  "include": ["src", "vitest.config.ts", "vitest-setup.ts"]
+  "files": [],
+  "include": []
 }
+
