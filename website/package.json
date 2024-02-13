@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "clean": "rimraf .next",
-    "build": "next build",
+    "build": "cross-env BASE_PATH='/live-region-element' next build",
     "develop": "next",
     "type-check": "npx tsc --noEmit"
   },
@@ -17,6 +17,7 @@
   "devDependencies": {
     "@types/node": "^20.11.17",
     "@types/react": "^18.2.55",
+    "cross-env": "^7.0.3",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
   }
