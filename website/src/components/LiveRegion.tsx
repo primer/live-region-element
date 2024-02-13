@@ -32,8 +32,8 @@ export function LiveRegion() {
         // @ts-expect-error shadowrootmode exists on `template`
         <template shadowrootmode="open">
           <style>{style}</style>
-          <div id="polite" aria-live="polite" aria-atomic="true"></div>
-          <div id="assertive" aria-live="assertive" aria-atomic="true"></div>
+          <div id="polite" aria-live="polite" aria-atomic="true" />
+          <div id="assertive" aria-live="assertive" aria-atomic="true" />
         </template>
       )}
     </live-region>

@@ -44,13 +44,13 @@ function findOrCreateLiveRegion(from?: HTMLElement, appendTo?: HTMLElement): Liv
   // relative to the given element
   liveRegion = from ? getClosestLiveRegion(from) : null
   if (liveRegion !== null) {
-    return liveRegion as LiveRegionElement
+    return liveRegion
   }
 
   // Otherwise, try to find any `<live-region>` element in the document
   liveRegion = document.querySelector('live-region')
   if (liveRegion !== null) {
-    return liveRegion as LiveRegionElement
+    return liveRegion
   }
 
   // Finally, if none exist, create a new `<live-region>` element and append it
