@@ -51,6 +51,12 @@ const config = {
         'i18n-text/no-en': 'off',
       },
     },
+    {
+      files: ['website/**/*.ts', 'website/**/*.tsx'],
+      rules: {
+        'i18n-text/no-en': 'off',
+      },
+    },
   ],
 }
 
