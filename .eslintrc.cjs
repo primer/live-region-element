@@ -37,6 +37,14 @@ const config = {
   },
   overrides: [
     {
+      files: ['**/*.ts', '**/*.tsx'],
+      rules: {
+        'filenames/match-regex': 'off',
+        'import/no-namespace': 'off',
+        '@typescript-eslint/no-namespace': 'off',
+      },
+    },
+    {
       files: ['*.test.ts'],
       rules: {
         'github/no-inner-html': 'off',
