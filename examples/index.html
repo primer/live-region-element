@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>live-region-element</title>
+  </head>
+  <body>
+    <main>
+      <h1>live-region-element</h1>
+      <h2>announce</h2>
+
+      <h3>Polite</h3>
+      <button id="js-announce-polite">Announce</button>
+
+      <h3>Assertive</h3>
+      <button id="js-announce-assertive">Announce</button>
+
+      <h2>announceFromElement</h2>
+      <h3>Polite</h3>
+      <p id="some-text">Hello world.</p>
+      <button id="js-announce-el-polite">Announce</button>
+
+      <h3>Assertive</h3>
+      <p id="more-text">Goodbye for now.</p>
+      <button id="js-announce-el-assertive">Announce</button>
+
+      <live-region>
+        <template shadowrootmode="open">
+          <style>
+            :host {
+              clip-path: inset(50%);
+              height: 1px;
+              overflow: hidden;
+              position: absolute;
+              white-space: nowrap;
+              width: 1px;
+            }
+          </style>
+          <div id="polite" aria-live="polite" aria-atomic="true"></div>
+          <div id="assertive" aria-live="assertive" aria-atomic="true"></div>
+        </template>
+      </live-region>
+    </main>
+
+    <script type="module" src="../dist/esm/index.js"></script>
+    <script>
+      document.getElementById('js-announce-polite').addEventListener('click', () => {
+        const liveRegion = document.querySelector('live-region')
+        liveRegion.announce('Example polite message', {
+          politeness: 'polite',
+        })
+      })
+
+      document.getElementById('js-announce-assertive').addEventListener('click', () => {
+        const liveRegion = document.querySelector('live-region')
+        liveRegion.announce('Example assertive message', {
+          politeness: 'assertive',
+        })
+      })
+
+      document.getElementById('js-announce-el-polite').addEventListener('click', () => {
+        const liveRegion = document.querySelector('live-region')
+        liveRegion.announceFromElement(document.querySelector('#some-text'), {
+          politeness: 'polite',
+        })
+      })
+
+      document.getElementById('js-announce-el-assertive').addEventListener('click', () => {
+        const liveRegion = document.querySelector('live-region')
+        liveRegion.announceFromElement(document.querySelector('#more-text'), {
+          politeness: 'assertive',
+        })
+      })
+    </script>
+
+  </body>
+</html>
