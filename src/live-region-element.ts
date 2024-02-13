@@ -83,5 +83,16 @@ function getTemplate() {
   return template
 }
 
+declare global {
+  interface Window {
+    LiveRegionElement: typeof LiveRegionElement
+  }
+}
+
+if (!window.customElements.get('live-region')) {
+  window.LiveRegionElement = LiveRegionElement
+  window.customElements.define('live-region', LiveRegionElement)
+}
+
 export {LiveRegionElement, templateContent}
 export type {AnnounceOptions}
