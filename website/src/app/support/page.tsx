@@ -158,7 +158,7 @@ const expectations: Array<Expectation> = [
   },
   {
     expectation: 'Message in dialog',
-    description: '',
+    description: 'The live region should announce messages within a dialog element or an element with aria-modal',
     testUrl: '/tests/message-in-dialog',
     procedure: [
       'Visit the test page URL',
@@ -167,6 +167,12 @@ const expectations: Array<Expectation> = [
       'Navigate to the Announce button',
       'Activate the button',
       'The message "Example polite message" should be announced',
+      'Only the live region within the dialog should be updated',
+      'Navigate to the Open aria-modal dialog button',
+      'Activate the button',
+      'Navigate to the Announce button',
+      'The message "Example polite message" should be announced',
+      'Only the live region within the dialog should be updated',
     ],
     results: {
       jaws: {
@@ -285,6 +291,7 @@ export default function SupportPage() {
             <article key={expectation.expectation}>
               <h3>{expectation.expectation}</h3>
               <p>{expectation.description}</p>
+              <Link href={expectation.testUrl}>{expectation.expectation} test URL</Link>
               <table>
                 <caption>{expectation.expectation} support</caption>
                 <thead>
@@ -343,7 +350,7 @@ export default function SupportPage() {
                 </tbody>
               </table>
 
-              <h4>{expectation.expectation} procedure</h4>
+              <h4>{expectation.expectation} test procedure</h4>
               <ol>
                 {expectation.procedure.map(step => {
                   return <li key={step}>{step}</li>

@@ -1,7 +1,6 @@
 'use client'
 
 import {announce} from '@primer/live-region-element'
-import {LiveRegion} from '../../../components/LiveRegion'
 
 export default function PoliteMessageTest() {
   return (
@@ -18,7 +17,7 @@ export default function PoliteMessageTest() {
         Repeated message
       </button>
       <p>End of example</p>
-      <LiveRegion />
+      <live-region />
     </>
   )
 }
