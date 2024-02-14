@@ -1,3 +1,5 @@
+import './global.css'
+
 export const metadata = {
   title: 'Live Region Element',
   description: 'Examples for the live region custom element',

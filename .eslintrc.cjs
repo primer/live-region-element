@@ -42,6 +42,7 @@ const config = {
         'filenames/match-regex': 'off',
         'import/no-namespace': 'off',
         '@typescript-eslint/no-namespace': 'off',
+        '@typescript-eslint/array-type': 'off',
       },
     },
     {

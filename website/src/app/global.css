@@ -1,0 +1,54 @@
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  font-weight: normal;
+  font-size: 100%;
+  line-height: 1.5;
+}
+
+/* Tables */
+table {
+  background-color: #eee;
+  border-collapse: collapse;
+  overflow: auto;
+  width: 100%;
+}
+
+table,
+td,
+th {
+  border: 1px solid #999;
+}
+
+th,
+td {
+  padding: 0.25rem;
+  text-align: start;
+}
+
+/* Table results states */
+.supported {
+  background-color: green;
+  color: white;
+}
+
+.no-support {
+  background-color: red;
+  color: white;
+}
+
+.partial-support {
+  background-color: yellow;
+}
+
+.unknown-support {
+}
