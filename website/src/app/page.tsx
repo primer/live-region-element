@@ -1,12 +1,15 @@
 'use client'
 
 import {announce, announceFromElement} from '@primer/live-region-element'
+import Link from 'next/link'
 import {LiveRegion} from '../components/LiveRegion'
 
 export default function IndexPage() {
   return (
     <>
       <h1>live-region-element</h1>
+      <Link href="/support">View screen reader support</Link>
+
       <h2>announce</h2>
 
       <h3>Polite</h3>

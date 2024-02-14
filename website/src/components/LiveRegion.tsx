@@ -2,6 +2,7 @@
 
 import '@primer/live-region-element/define'
 import {LiveRegionElement} from '@primer/live-region-element'
+import {useEffect, useState} from 'react'
 import {canUseDOM} from '../environment'
 
 import * as React from 'react'
@@ -26,16 +27,5 @@ const style = `
 `
 
 export function LiveRegion() {
-  return (
-    <live-region>
-      {canUseDOM ? null : (
-        // @ts-expect-error shadowrootmode exists on `template`
-        <template shadowrootmode="open">
-          <style>{style}</style>
-          <div id="polite" aria-live="polite" aria-atomic="true" />
-          <div id="assertive" aria-live="assertive" aria-atomic="true" />
-        </template>
-      )}
-    </live-region>
-  )
+  return <live-region />
 }
