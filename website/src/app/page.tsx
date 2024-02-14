@@ -2,7 +2,6 @@
 
 import {announce, announceFromElement} from '@primer/live-region-element'
 import Link from 'next/link'
-import {LiveRegion} from '../components/LiveRegion'
 
 export default function IndexPage() {
   return (
@@ -63,7 +62,7 @@ export default function IndexPage() {
         Announce element assertively
       </button>
 
-      <LiveRegion />
+      <live-region />
     </>
   )
 }
