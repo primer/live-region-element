@@ -1,2 +1,4 @@
 dist
 out
+.changeset
+CHANGELOG.md
