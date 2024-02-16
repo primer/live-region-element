@@ -1,6 +1,5 @@
 {
   "name": "@primer/live-region-element",
-  "private": true,
   "version": "0.1.0",
   "type": "module",
   "exports": {
@@ -29,6 +28,15 @@
       "require": "./dist/cjs/define.cjs"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primer/live-region-element.git",
+    "directory": "packages/live-region-element"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "clean": "rimraf dist",
     "build": "rollup -c",
@@ -55,5 +63,11 @@
     "rollup-plugin-esbuild": "^6.1.1",
     "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "^5.3.3"
-  }
+  },
+  "sideEffects": [
+    "./dist/esm/define.js",
+    "./dist/cjs/define.js",
+    "./dist/esm/node/define.js",
+    "./dist/cjs/node/define.js"
+  ]
 }
