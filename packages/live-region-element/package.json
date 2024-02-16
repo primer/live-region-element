@@ -30,7 +30,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/primer/live-region-element.git",
+    "url": "git+https://github.com/primer/live-region-element.git",
     "directory": "packages/live-region-element"
   },
   "publishConfig": {
