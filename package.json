@@ -13,10 +13,12 @@
     "format": "prettier --cache --write '**/*.{js,css,md,mdx,ts,tsx,yml}'",
     "format:diff": "prettier --cache --list-different '**/*.{js,css,md,mdx,ts,tsx,yml}'",
     "lint": "eslint .",
+    "release": "npm run clean && npm run build && changeset publish",
     "test": "vitest",
     "type-check": "npm run type-check -ws --if-present"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@github/prettier-config": "^0.0.6",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
