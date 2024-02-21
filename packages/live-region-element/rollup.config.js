@@ -8,7 +8,7 @@ import typescript from 'rollup-plugin-typescript2'
  */
 const config = [
   {
-    input: ['./src/index.ts', './src/define.ts'],
+    input: ['./src/index.ts'],
     external: ['@lit-labs/ssr-dom-shim'],
     plugins: [typescript({tsconfig: 'tsconfig.build.json'}), esbuild()],
     output: {
@@ -17,7 +17,7 @@ const config = [
     },
   },
   {
-    input: ['./src/index.ts', './src/define.ts'],
+    input: ['./src/index.ts'],
     external: ['@lit-labs/ssr-dom-shim'],
     plugins: [typescript({tsconfig: 'tsconfig.build.json'}), esbuild()],
     output: {
@@ -27,7 +27,7 @@ const config = [
     },
   },
   {
-    input: ['./src/index.ts', './src/define.ts'],
+    input: ['./src/index.ts'],
     external: ['@lit-labs/ssr-dom-shim'],
     plugins: [
       esbuild(),
@@ -50,7 +50,7 @@ const config = [
     },
   },
   {
-    input: ['./src/index.ts', './src/define.ts'],
+    input: ['./src/index.ts'],
     external: ['@lit-labs/ssr-dom-shim'],
     plugins: [
       esbuild(),

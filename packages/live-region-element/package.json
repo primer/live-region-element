@@ -16,18 +16,6 @@
       },
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.cjs"
-    },
-    "./define": {
-      "types": {
-        "import": "./dist/esm/define.d.ts",
-        "require": "./dist/cjs/define.d.cts"
-      },
-      "node": {
-        "import": "./dist/esm/node/define.js",
-        "require": "./dist/cjs/node/define.cjs"
-      },
-      "import": "./dist/esm/define.js",
-      "require": "./dist/cjs/define.cjs"
     }
   },
   "repository": {
@@ -68,9 +56,14 @@
   },
   "sideEffects": [
     "./src/define.ts",
+    "./src/index.ts",
     "./dist/esm/define.js",
-    "./dist/cjs/define.js",
+    "./dist/esm/index.js",
+    "./dist/cjs/define.cjs",
+    "./dist/cjs/index.cjs",
     "./dist/esm/node/define.js",
-    "./dist/cjs/node/define.js"
+    "./dist/esm/node/index.js",
+    "./dist/cjs/node/define.cjs",
+    "./dist/cjs/node/index.cjs"
   ]
 }
