@@ -1,5 +1,11 @@
 # @primer/live-region-element
 
+## 0.2.0
+
+### Minor Changes
+
+- 15464e5: Add define behavior to entrypoint, remove define entrypoint
+
 ## 0.1.1
 
 ### Patch Changes
