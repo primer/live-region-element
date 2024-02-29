@@ -1,3 +1,4 @@
+import './define'
 import {LiveRegionElement, templateContent, type AnnounceOptions} from './live-region-element'
 
 type GlobalAnnounceOptions = AnnounceOptions & {

@@ -42,8 +42,9 @@ class LiveRegionElement extends HTMLElement {
    * corresponding politeness level
    */
   public announceFromElement(element: HTMLElement, options?: AnnounceOptions) {
-    if (element.textContent) {
-      this.announce(element.textContent, options)
+    const textContent = getTextContent(element)
+    if (textContent !== '') {
+      this.announce(textContent, options)
     }
   }
 
@@ -54,6 +55,22 @@ class LiveRegionElement extends HTMLElement {
     }
     return container.textContent
   }
+}
+
+function getTextContent(element: HTMLElement): string {
+  let value: string | null = ''
+
+  if (element.hasAttribute('aria-label')) {
+    value = element.getAttribute('aria-label')
+    // eslint-disable-next-line github/no-innerText
+  } else if (element.innerText) {
+    // eslint-disable-next-line github/no-innerText
+    value = element.innerText
+  } else if (element.textContent) {
+    value = element.textContent
+  }
+
+  return value ? value.trim() : ''
 }
 
 let template: HTMLTemplateElement | null = null
