@@ -1,7 +1,6 @@
 import {afterEach, describe, test, expect} from 'vitest'
 import {announce, announceFromElement} from '../'
 import {LiveRegionElement} from '../live-region-element'
-import '../define'
 
 describe('Global announcements', () => {
   afterEach(() => {

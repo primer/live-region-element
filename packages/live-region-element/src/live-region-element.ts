@@ -44,7 +44,7 @@ class LiveRegionElement extends HTMLElement {
   public announceFromElement(element: HTMLElement, options?: AnnounceOptions) {
     const textContent = getTextContent(element)
     if (textContent !== '') {
-      this.announce(getTextContent(element), options)
+      this.announce(textContent, options)
     }
   }
 
@@ -62,8 +62,12 @@ function getTextContent(element: HTMLElement): string {
 
   if (element.hasAttribute('aria-label')) {
     value = element.getAttribute('aria-label')
+    // eslint-disable-next-line github/no-innerText
   } else if (element.innerText) {
+    // eslint-disable-next-line github/no-innerText
     value = element.innerText
+  } else if (element.textContent) {
+    value = element.textContent
   }
 
   return value ? value.trim() : ''
