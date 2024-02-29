@@ -42,8 +42,9 @@ class LiveRegionElement extends HTMLElement {
    * corresponding politeness level
    */
   public announceFromElement(element: HTMLElement, options?: AnnounceOptions) {
-    if (element.textContent) {
-      this.announce(element.textContent, options)
+    const textContent = getTextContent(element)
+    if (textContent !== '') {
+      this.announce(getTextContent(element), options)
     }
   }
 
@@ -54,6 +55,18 @@ class LiveRegionElement extends HTMLElement {
     }
     return container.textContent
   }
+}
+
+function getTextContent(element: HTMLElement): string {
+  let value: string | null = ''
+
+  if (element.hasAttribute('aria-label')) {
+    value = element.getAttribute('aria-label')
+  } else if (element.innerText) {
+    value = element.innerText
+  }
+
+  return value ? value.trim() : ''
 }
 
 let template: HTMLTemplateElement | null = null
