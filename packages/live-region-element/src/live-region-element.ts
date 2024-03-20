@@ -1,15 +1,58 @@
+import {MinHeap} from './MinHeap'
+import {Ordering, type Order} from './order'
+
+type Politeness = 'polite' | 'assertive'
 type AnnounceOptions = {
-  politeness?: 'polite' | 'assertive'
+  delayMs?: number
+  politeness?: Politeness
 }
 
+type Message = {
+  contents: string
+  politeness: Politeness
+  scheduled: number | 'immediate'
+}
+
+type Cancel = () => void
+
+/**
+ * The default delay between messages being announced by the live region
+ */
+const DEFAULT_THROTTLE_DELAY_MS = 500
+
 class LiveRegionElement extends HTMLElement {
-  constructor() {
+  #queue: MinHeap<Message>
+  #timeoutId: number | null
+
+  updateContainerWithMessage: Throttle<(message: Message) => void>
+
+  constructor({waitMs}: {waitMs: number}) {
     super()
+
     if (!this.shadowRoot) {
       const template = getTemplate()
       const shadowRoot = this.attachShadow({mode: 'open'})
       shadowRoot.appendChild(template.content.cloneNode(true))
     }
+
+    this.#timeoutId = null
+    this.#queue = new MinHeap({
+      compareFn: compareMessages,
+    })
+
+    this.updateContainerWithMessage = throttle((message: Message) => {
+      const {contents, politeness} = message
+      const container = this.shadowRoot?.getElementById(politeness)
+      if (!container) {
+        throw new Error(`Unable to find container for message. Expected a container with id="${politeness}"`)
+      }
+
+      if (container.textContent === contents) {
+        container.textContent = `${contents}\u00A0`
+      } else {
+        container.textContent = contents
+      }
+    }, waitMs ?? DEFAULT_THROTTLE_DELAY_MS)
   }
 
   /**
@@ -23,17 +66,17 @@ class LiveRegionElement extends HTMLElement {
    * @see https://www.w3.org/TR/wai-aria/#aria-live
    * @see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions
    */
-  public announce(message: string, options: AnnounceOptions = {}) {
-    const {politeness = 'polite'} = options
-    const container = this.shadowRoot?.getElementById(politeness)
-    if (!container) {
-      throw new Error('Unable to find container for message')
+  public announce(message: string, options: AnnounceOptions = {}): Cancel {
+    const {delayMs, politeness = 'polite'} = options
+    const item: Message = {
+      politeness,
+      contents: message,
+      scheduled: delayMs ? Date.now() + delayMs : 'immediate',
     }
-
-    if (container.textContent === message) {
-      container.textContent = `${message}\u00A0`
-    } else {
-      container.textContent = message
+    this.#queue.insert(item)
+    this.performWork()
+    return () => {
+      this.#queue.delete(item)
     }
   }
 
@@ -41,11 +84,49 @@ class LiveRegionElement extends HTMLElement {
    * Announce a message using the text content of an element with a
    * corresponding politeness level
    */
-  public announceFromElement(element: HTMLElement, options?: AnnounceOptions) {
+  public announceFromElement(element: HTMLElement, options?: AnnounceOptions): Cancel {
     const textContent = getTextContent(element)
     if (textContent !== '') {
-      this.announce(textContent, options)
+      return this.announce(textContent, options)
     }
+    return noop
+  }
+
+  performWork() {
+    let message = this.#queue.peek()
+    if (!message) {
+      return
+    }
+
+    if (this.#timeoutId !== null) {
+      clearTimeout(this.#timeoutId)
+      this.#timeoutId = null
+    }
+
+    if (message.scheduled === 'immediate') {
+      message = this.#queue.pop()
+      if (message) {
+        this.updateContainerWithMessage(message)
+      }
+      this.performWork()
+      return
+    }
+
+    const now = Date.now()
+    if (message.scheduled <= now) {
+      message = this.#queue.pop()
+      if (message) {
+        this.updateContainerWithMessage(message)
+      }
+      this.performWork()
+      return
+    }
+
+    const timeout = message.scheduled > now ? message.scheduled - now : 0
+    this.#timeoutId = window.setTimeout(() => {
+      this.#timeoutId = null
+      this.performWork()
+    }, timeout)
   }
 
   getMessage(politeness: AnnounceOptions['politeness'] = 'polite') {
@@ -54,6 +135,19 @@ class LiveRegionElement extends HTMLElement {
       throw new Error('Unable to find container for message')
     }
     return container.textContent
+  }
+
+  /**
+   * Stop any pending messages from being announced by the live region
+   */
+  public clear(): void {
+    if (this.#timeoutId !== null) {
+      clearTimeout(this.#timeoutId)
+      this.#timeoutId = null
+    }
+
+    this.updateContainerWithMessage.cancel()
+    this.#queue.clear()
   }
 }
 
@@ -98,6 +192,81 @@ function getTemplate() {
   // eslint-disable-next-line github/no-inner-html
   template.innerHTML = templateContent
   return template
+}
+
+function compareMessages(a: Message, b: Message): Order {
+  if (a.scheduled === b.scheduled) {
+    return Ordering.Equal
+  }
+
+  // Schedule a before b
+  if (a.scheduled === 'immediate' && b.scheduled !== 'immediate') {
+    return Ordering.Less
+  }
+
+  // Schedule a after b
+  if (a.scheduled !== 'immediate' && b.scheduled === 'immediate') {
+    return Ordering.Greater
+  }
+
+  // Schedule a before b
+  if (a.scheduled < b.scheduled) {
+    return Ordering.Less
+  }
+
+  // Schedule a after b
+  return Ordering.Greater
+}
+
+function noop() {}
+
+interface Throttle<T extends (...args: any) => void> {
+  (...args: Parameters<T>): void
+  cancel(): void
+}
+
+function throttle<T extends (...args: any) => void>(fn: T, wait: number): Throttle<T> {
+  const queue: Array<Array<Parameters<T>>> = []
+  let timeoutId: number | null = null
+
+  function processQueue() {
+    if (timeoutId !== null) {
+      return
+    }
+
+    if (queue.length === 0) {
+      return
+    }
+
+    const args = queue.shift()
+    if (args === undefined) {
+      return
+    }
+
+    fn(...args)
+
+    timeoutId = window.setTimeout(() => {
+      timeoutId = null
+      processQueue()
+    }, wait)
+  }
+
+  function throttled(...args: Parameters<T>) {
+    queue.push(args)
+    if (timeoutId === null) {
+      processQueue()
+    }
+  }
+
+  throttled.cancel = () => {
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId)
+      timeoutId = null
+    }
+    queue.length = 0
+  }
+
+  return throttled
 }
 
 export {LiveRegionElement, templateContent}
