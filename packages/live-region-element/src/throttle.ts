@@ -1,8 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface Throttle<T extends (...args: any) => void> {
   (...args: Parameters<T>): void
   cancel(): void
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function throttle<T extends (...args: any) => void>(fn: T, wait: number): Throttle<T> {
   const queue: Array<Array<Parameters<T>>> = []
   let timeoutId: number | null = null
