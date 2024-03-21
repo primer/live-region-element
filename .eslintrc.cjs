@@ -27,12 +27,7 @@ const config = {
     es6: true,
   },
   rules: {
-    'no-unused-vars': [
-      'error',
-      {
-        argsIgnorePattern: '^_',
-      },
-    ],
+    'no-unused-vars': 'off',
     'import/no-unresolved': 'off',
   },
   overrides: [
@@ -43,6 +38,12 @@ const config = {
         'import/no-namespace': 'off',
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/array-type': 'off',
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            argsIgnorePattern: '^_',
+          },
+        ],
       },
     },
     {

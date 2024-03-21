@@ -35,6 +35,19 @@ export default function IndexPage() {
         Announce assertively
       </button>
 
+      <h3>Announce with delay</h3>
+      <button
+        type="button"
+        onClick={() => {
+          announce('Example polite message', {
+            delayMs: 5000,
+            politeness: 'polite',
+          })
+        }}
+      >
+        Announce five seconds from now
+      </button>
+
       <h2>announceFromElement</h2>
       <h3>Polite</h3>
       <p id="some-text">Hello world.</p>
