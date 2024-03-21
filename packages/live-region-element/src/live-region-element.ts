@@ -1,9 +1,25 @@
 import {MinHeap} from './MinHeap'
 import {Ordering, type Order} from './order'
+import {throttle, type Throttle} from './throttle'
 
 type Politeness = 'polite' | 'assertive'
+
 type AnnounceOptions = {
+  /**
+   * A delay in milliseconds to wait before announcing a message.
+   */
   delayMs?: number
+
+  /**
+   * The politeness level for a message.
+   *
+   * Note: a politeness level of `assertive` should only be used for
+   * time-sensistive or critical notifications that absolutely require the
+   * user's immediate attention
+   *
+   * @see https://www.w3.org/TR/wai-aria/#aria-live
+   * @see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions
+   */
   politeness?: Politeness
 }
 
@@ -13,6 +29,9 @@ type Message = {
   scheduled: number | 'immediate'
 }
 
+/**
+ * A function to cancel a scheduled message.
+ */
 type Cancel = () => void
 
 /**
@@ -23,10 +42,9 @@ const DEFAULT_THROTTLE_DELAY_MS = 500
 class LiveRegionElement extends HTMLElement {
   #queue: MinHeap<Message>
   #timeoutId: number | null
-
   updateContainerWithMessage: Throttle<(message: Message) => void>
 
-  constructor({waitMs}: {waitMs: number}) {
+  constructor({waitMs}: {waitMs?: number} = {}) {
     super()
 
     if (!this.shadowRoot) {
@@ -58,20 +76,13 @@ class LiveRegionElement extends HTMLElement {
   /**
    * Announce a message using a live region with a corresponding politeness
    * level.
-   *
-   * Note: a politeness level of `assertive` should only be used for
-   * time-sensistive or critical notifications that absolutely require the
-   * user's immediate attention
-   *
-   * @see https://www.w3.org/TR/wai-aria/#aria-live
-   * @see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions
    */
   public announce(message: string, options: AnnounceOptions = {}): Cancel {
     const {delayMs, politeness = 'polite'} = options
     const item: Message = {
       politeness,
       contents: message,
-      scheduled: delayMs ? Date.now() + delayMs : 'immediate',
+      scheduled: delayMs !== undefined ? Date.now() + delayMs : 'immediate',
     }
     this.#queue.insert(item)
     this.performWork()
@@ -219,55 +230,6 @@ function compareMessages(a: Message, b: Message): Order {
 }
 
 function noop() {}
-
-interface Throttle<T extends (...args: any) => void> {
-  (...args: Parameters<T>): void
-  cancel(): void
-}
-
-function throttle<T extends (...args: any) => void>(fn: T, wait: number): Throttle<T> {
-  const queue: Array<Array<Parameters<T>>> = []
-  let timeoutId: number | null = null
-
-  function processQueue() {
-    if (timeoutId !== null) {
-      return
-    }
-
-    if (queue.length === 0) {
-      return
-    }
-
-    const args = queue.shift()
-    if (args === undefined) {
-      return
-    }
-
-    fn(...args)
-
-    timeoutId = window.setTimeout(() => {
-      timeoutId = null
-      processQueue()
-    }, wait)
-  }
-
-  function throttled(...args: Parameters<T>) {
-    queue.push(args)
-    if (timeoutId === null) {
-      processQueue()
-    }
-  }
-
-  throttled.cancel = () => {
-    if (timeoutId !== null) {
-      clearTimeout(timeoutId)
-      timeoutId = null
-    }
-    queue.length = 0
-  }
-
-  return throttled
-}
 
 export {LiveRegionElement, templateContent}
 export type {AnnounceOptions}

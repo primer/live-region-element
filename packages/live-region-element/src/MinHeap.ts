@@ -98,7 +98,7 @@ function hasRightChild(index: number, size: number) {
 }
 
 function hasParent(index: number) {
-  return index >= 0
+  return index > 0
 }
 
 function leftChild<T>(heap: Array<T>, index: number) {
