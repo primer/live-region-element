@@ -1,5 +1,11 @@
 # @primer/live-region-element
 
+## 0.4.0
+
+### Minor Changes
+
+- 9adf94d: Update logic for finding, or creating, live regions to work while within dialog elements
+
 ## 0.3.0
 
 ### Minor Changes
