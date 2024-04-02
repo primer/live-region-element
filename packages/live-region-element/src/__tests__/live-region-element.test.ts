@@ -1,5 +1,6 @@
 import {afterEach, beforeEach, describe, test, expect} from 'vitest'
-import {LiveRegionElement} from '../live-region-element'
+import {LiveRegionElement, compareMessages} from '../live-region-element'
+import {Ordering} from '../order'
 import '../define'
 
 describe('live-region-element', () => {
@@ -47,5 +48,115 @@ describe('live-region-element', () => {
     })
     expect(liveRegion.getMessage('polite')).toBe('')
     expect(liveRegion.getMessage('assertive')).toBe('test')
+  })
+
+  describe('compareMessages', () => {
+    test('messages with same politeness, a scheduled at same time as b', () => {
+      const now = Date.now()
+      expect(
+        compareMessages(
+          {
+            contents: 'test',
+            politeness: 'polite',
+            scheduled: now,
+          },
+          {
+            contents: 'test',
+            politeness: 'polite',
+            scheduled: now,
+          },
+        ),
+      ).toBe(Ordering.Equal)
+    })
+
+    test('messages with same politeness, a scheduled before b', () => {
+      const now = Date.now()
+      expect(
+        compareMessages(
+          {
+            contents: 'test',
+            politeness: 'polite',
+            scheduled: now,
+          },
+          {
+            contents: 'test',
+            politeness: 'polite',
+            scheduled: now + 1000,
+          },
+        ),
+      ).toBe(Ordering.Less)
+    })
+
+    test('messages with same politeness, a scheduled after b', () => {
+      const now = Date.now()
+      expect(
+        compareMessages(
+          {
+            contents: 'test',
+            politeness: 'polite',
+            scheduled: now + 1000,
+          },
+          {
+            contents: 'test',
+            politeness: 'polite',
+            scheduled: now,
+          },
+        ),
+      ).toBe(Ordering.Greater)
+    })
+
+    test('messages with different politeness, a scheduled at same time as b', () => {
+      const now = Date.now()
+      expect(
+        compareMessages(
+          {
+            contents: 'test',
+            politeness: 'assertive',
+            scheduled: now,
+          },
+          {
+            contents: 'test',
+            politeness: 'polite',
+            scheduled: now,
+          },
+        ),
+      ).toBe(Ordering.Less)
+    })
+
+    test('messages with different politeness, a scheduled before b', () => {
+      const now = Date.now()
+      expect(
+        compareMessages(
+          {
+            contents: 'test',
+            politeness: 'assertive',
+            scheduled: now,
+          },
+          {
+            contents: 'test',
+            politeness: 'polite',
+            scheduled: now + 1000,
+          },
+        ),
+      ).toBe(Ordering.Less)
+    })
+
+    test('messages with different politeness, a scheduled after b', () => {
+      const now = Date.now()
+      expect(
+        compareMessages(
+          {
+            contents: 'test',
+            politeness: 'assertive',
+            scheduled: now + 1000,
+          },
+          {
+            contents: 'test',
+            politeness: 'polite',
+            scheduled: now,
+          },
+        ),
+      ).toBe(Ordering.Greater)
+    })
   })
 })

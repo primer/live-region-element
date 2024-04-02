@@ -247,18 +247,51 @@ function getTemplate() {
   return template
 }
 
-function compareMessages(a: Message, b: Message): Order {
-  if (a.scheduled === b.scheduled) {
-    return Ordering.Equal
+export function compareMessages(a: Message, b: Message): Order {
+  if (a.politeness === b.politeness) {
+    if (a.scheduled === b.scheduled) {
+      return Ordering.Equal
+    }
+
+    // Schedule a before b
+    if (a.scheduled < b.scheduled) {
+      return Ordering.Less
+    }
+
+    // Schedule a after b
+    return Ordering.Greater
   }
 
-  // Schedule a before b
-  if (a.scheduled < b.scheduled) {
+  // Only prioritize assertive messages if they are scheduled at the same time,
+  // or before
+  if (a.politeness === 'assertive' && b.politeness !== 'assertive') {
+    if (a.scheduled === b.scheduled) {
+      return Ordering.Less
+    }
+
+    if (a.scheduled < b.scheduled) {
+      return Ordering.Less
+    }
+
+    return Ordering.Greater
+  }
+
+  if (a.politeness !== 'assertive' && b.politeness === 'assertive') {
+    // Schedule a after b
+    if (a.scheduled === b.scheduled) {
+      return Ordering.Greater
+    }
+
+    // Schedule a after b
+    if (a.scheduled > b.scheduled) {
+      return Ordering.Greater
+    }
+
+    // Schedule a before b
     return Ordering.Less
   }
 
-  // Schedule a after b
-  return Ordering.Greater
+  return Ordering.Equal
 }
 
 function noop() {}
