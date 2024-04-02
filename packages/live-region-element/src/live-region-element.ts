@@ -1,6 +1,5 @@
 import {MinHeap} from './MinHeap'
 import {Ordering, type Order} from './order'
-import {throttle, type Throttle} from './throttle'
 
 type Politeness = 'polite' | 'assertive'
 
@@ -26,7 +25,7 @@ type AnnounceOptions = {
 type Message = {
   contents: string
   politeness: Politeness
-  scheduled: number | 'immediate'
+  scheduled: number
 }
 
 /**
@@ -40,11 +39,25 @@ type Cancel = () => void
 const DEFAULT_THROTTLE_DELAY_MS = 500
 
 class LiveRegionElement extends HTMLElement {
-  #queue: MinHeap<Message>
-  #timeoutId: number | null
-  updateContainerWithMessage: Throttle<(message: Message) => void>
+  /**
+   * A flag to indicate if a message has been announced and we are currently
+   * waiting for the delay to pass before announcing the next message.
+   */
+  #pending: boolean
 
-  constructor({waitMs}: {waitMs?: number} = {}) {
+  /**
+   * A priority queue to store messages to be announced by the live region.
+   */
+  #queue: MinHeap<Message>
+
+  /**
+   * The id for a timeout being used by the live region to either wait until the
+   * next message or wait until the delay has passed before announcing the next
+   * message
+   */
+  #timeoutId: number | null
+
+  constructor() {
     super()
 
     if (!this.shadowRoot) {
@@ -53,24 +66,27 @@ class LiveRegionElement extends HTMLElement {
       shadowRoot.appendChild(template.content.cloneNode(true))
     }
 
+    this.#pending = false
     this.#timeoutId = null
     this.#queue = new MinHeap({
       compareFn: compareMessages,
     })
+  }
 
-    this.updateContainerWithMessage = throttle((message: Message) => {
-      const {contents, politeness} = message
-      const container = this.shadowRoot?.getElementById(politeness)
-      if (!container) {
-        throw new Error(`Unable to find container for message. Expected a container with id="${politeness}"`)
-      }
+  /**
+   * The delay in milliseconds to wait between announcements. This helps to
+   * prevent announcements getting dropped if multiple are made at the same time.
+   */
+  get delay(): number {
+    const value = this.getAttribute('delay')
+    if (value) {
+      return parseInt(value, 10)
+    }
+    return DEFAULT_THROTTLE_DELAY_MS
+  }
 
-      if (container.textContent === contents) {
-        container.textContent = `${contents}\u00A0`
-      } else {
-        container.textContent = contents
-      }
-    }, waitMs ?? DEFAULT_THROTTLE_DELAY_MS)
+  set delay(value: number) {
+    this.setAttribute('delay', `${value}`)
   }
 
   /**
@@ -79,13 +95,14 @@ class LiveRegionElement extends HTMLElement {
    */
   public announce(message: string, options: AnnounceOptions = {}): Cancel {
     const {delayMs, politeness = 'polite'} = options
+    const now = Date.now()
     const item: Message = {
       politeness,
       contents: message,
-      scheduled: delayMs !== undefined ? Date.now() + delayMs : 'immediate',
+      scheduled: delayMs !== undefined ? now + delayMs : now,
     }
     this.#queue.insert(item)
-    this.performWork()
+    this.#performWork()
     return () => {
       this.#queue.delete(item)
     }
@@ -103,7 +120,11 @@ class LiveRegionElement extends HTMLElement {
     return noop
   }
 
-  performWork() {
+  #performWork() {
+    if (this.#pending) {
+      return
+    }
+
     let message = this.#queue.peek()
     if (!message) {
       return
@@ -114,29 +135,20 @@ class LiveRegionElement extends HTMLElement {
       this.#timeoutId = null
     }
 
-    if (message.scheduled === 'immediate') {
-      message = this.#queue.pop()
-      if (message) {
-        this.updateContainerWithMessage(message)
-      }
-      this.performWork()
-      return
-    }
-
     const now = Date.now()
     if (message.scheduled <= now) {
       message = this.#queue.pop()
       if (message) {
-        this.updateContainerWithMessage(message)
+        this.#updateContainerWithMessage(message)
       }
-      this.performWork()
+      this.#performWork()
       return
     }
 
     const timeout = message.scheduled > now ? message.scheduled - now : 0
     this.#timeoutId = window.setTimeout(() => {
       this.#timeoutId = null
-      this.performWork()
+      this.#performWork()
     }, timeout)
   }
 
@@ -148,16 +160,46 @@ class LiveRegionElement extends HTMLElement {
     return container.textContent
   }
 
+  #updateContainerWithMessage(message: Message) {
+    // Prevent any other announcements from being made while we are updating the
+    // contents to trigger an announcement
+    this.#pending = true
+
+    const {contents, politeness} = message
+    const container = this.shadowRoot?.getElementById(politeness)
+    if (!container) {
+      this.#pending = false
+      throw new Error(`Unable to find container for message. Expected a container with id="${politeness}"`)
+    }
+
+    if (container.textContent === contents) {
+      container.textContent = `${contents}\u00A0`
+    } else {
+      container.textContent = contents
+    }
+
+    if (this.#timeoutId !== null) {
+      clearTimeout(this.#timeoutId)
+    }
+
+    // Wait the set delay amount before announcing the next message. This should
+    // help to make sure that announcements are only made once every delay
+    // amount.
+    this.#timeoutId = window.setTimeout(() => {
+      this.#timeoutId = null
+      this.#pending = false
+      this.#performWork()
+    }, this.delay)
+  }
+
   /**
-   * Stop any pending messages from being announced by the live region
+   * Prevent pending messages from being announced by the live region.
    */
   public clear(): void {
     if (this.#timeoutId !== null) {
       clearTimeout(this.#timeoutId)
       this.#timeoutId = null
     }
-
-    this.updateContainerWithMessage.cancel()
     this.#queue.clear()
   }
 }
@@ -208,16 +250,6 @@ function getTemplate() {
 function compareMessages(a: Message, b: Message): Order {
   if (a.scheduled === b.scheduled) {
     return Ordering.Equal
-  }
-
-  // Schedule a before b
-  if (a.scheduled === 'immediate' && b.scheduled !== 'immediate') {
-    return Ordering.Less
-  }
-
-  // Schedule a after b
-  if (a.scheduled !== 'immediate' && b.scheduled === 'immediate') {
-    return Ordering.Greater
   }
 
   // Schedule a before b
