@@ -1,5 +1,11 @@
 # @primer/live-region-element
 
+## 0.5.0
+
+### Minor Changes
+
+- a20aa47: Update how LiveRegion throttles announcements for better ordering of announcements
+
 ## 0.4.0
 
 ### Minor Changes
