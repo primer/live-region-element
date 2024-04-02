@@ -47,24 +47,6 @@ It is **essential** that the `live-region` element exists in the initial HTML pa
 
 To do so, include `<live-region></live-region>` in your HTML and make sure that [the custom element has been defined](#defining-live-region-as-a-custom-element). Follow the [Declarative shadow DOM](#declarative-shadow-dom) section below if you would like to include this in your HTML.
 
-### Defining `live-region` as a custom element
-
-The `@primer/live-region-element` package provides an entrypoint that you can use to define the `live-region` custom element.
-
-```ts
-import '@primer/live-region-element/define`
-```
-
-If you prefer to define the custom element directly, import `LiveRegionElement` directly from the package and use that to define the `live-region` element. For example:
-
-```ts
-import {LiveRegionElement} from '@primer/live-region-element'
-
-if (!customElements.get('live-region')) {
-  customElements.define('live-region', LiveRegionElement)
-}
-```
-
 ### Declarative Shadow DOM
 
 The `live-region` custom element includes support for [Declarative Shadow DOM](https://developer.chrome.com/docs/css-ui/declarative-shadow-dom) and you can leverage this feature by using the following snippet:
@@ -89,6 +71,57 @@ The `live-region` custom element includes support for [Declarative Shadow DOM](h
 ```
 
 In addition, a `templateContent` export is available through the package which can be used alongside `<template shadowrootmode="open">` to support this feature.
+
+### Delaying announcements
+
+Both `announce` and `announceFromElement` provide support for announcing
+messages at a later point in time. In the example below, we are waiting five
+seconds before announcing the message.
+
+```ts
+import {announce} from '@primer/live-region-element'
+
+announce('Example message', {
+  delayMs: 5000,
+})
+```
+
+### Canceling announcements
+
+Any announcements made with `announce` and `announceFromElement` may be
+cancelled. This may be useful if a delayed announcements has become outdated. To
+cancel an announcement, call the return value of either method.
+
+```ts
+import {announce} from '@primer/live-region-element'
+
+const cancel = announce('Example message', {
+  delayMs: 5000,
+})
+
+// At some point before five seconds, call:
+cancel()
+```
+
+If you would like to clear all announcements, like when transitioning between
+routes, you can call the `clear()` method on an existing `LiveRegionElement`.
+
+```ts
+const liveRegion = document.querySelector('live-region')
+
+// Send example messages
+liveRegion.announce('Example polite message', {
+  delayMs: 1000,
+  politeness: 'polite',
+})
+liveRegion.announce('Example polite message', {
+  delayMs: 1000,
+  politeness: 'polite',
+})
+
+// Clear all pending messages
+liveRegion.clear()
+```
 
 ## 🙌 Contributing
 
