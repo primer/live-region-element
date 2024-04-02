@@ -20,12 +20,18 @@ type AnnounceOptions = {
    * @see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions
    */
   politeness?: Politeness
+
+  /**
+   * The priority level for a message.
+   */
+  priority?: 'immediate' | 'background'
 }
 
 type Message = {
   contents: string
   politeness: Politeness
   scheduled: number
+  priority: AnnounceOptions['priority']
 }
 
 /**
@@ -94,10 +100,11 @@ class LiveRegionElement extends HTMLElement {
    * level.
    */
   public announce(message: string, options: AnnounceOptions = {}): Cancel {
-    const {delayMs, politeness = 'polite'} = options
+    const {delayMs, politeness = 'polite', priority = 'background'} = options
     const now = Date.now()
     const item: Message = {
       politeness,
+      priority,
       contents: message,
       scheduled: delayMs !== undefined ? now + delayMs : now,
     }
@@ -248,17 +255,31 @@ function getTemplate() {
 }
 
 function compareMessages(a: Message, b: Message): Order {
-  if (a.scheduled === b.scheduled) {
-    return Ordering.Equal
+  if (a.priority === b.priority) {
+    if (a.scheduled === b.scheduled) {
+      return Ordering.Equal
+    }
+
+    // Schedule a before b
+    if (a.scheduled < b.scheduled) {
+      return Ordering.Less
+    }
+
+    // Schedule a after b
+    return Ordering.Greater
   }
 
   // Schedule a before b
-  if (a.scheduled < b.scheduled) {
+  if (a.priority === 'immediate' && b.priority !== 'immediate') {
     return Ordering.Less
   }
 
   // Schedule a after b
-  return Ordering.Greater
+  if (a.priority !== 'immediate' && b.priority === 'immediate') {
+    return Ordering.Greater
+  }
+
+  return Ordering.Equal
 }
 
 function noop() {}
