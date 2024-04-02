@@ -1,5 +1,11 @@
 # @primer/live-region-element
 
+## 0.5.1
+
+### Patch Changes
+
+- 623a9ed: Update ordering of announcements to prioritize assertive announcements over polite if they are scheduled before or at the same time
+
 ## 0.5.0
 
 ### Minor Changes
