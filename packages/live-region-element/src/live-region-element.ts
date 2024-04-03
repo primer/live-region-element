@@ -36,7 +36,7 @@ type Cancel = () => void
 /**
  * The default delay between messages being announced by the live region
  */
-const DEFAULT_THROTTLE_DELAY_MS = 500
+const DEFAULT_THROTTLE_DELAY_MS = 150
 
 class LiveRegionElement extends HTMLElement {
   /**
