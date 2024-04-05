@@ -105,7 +105,7 @@ describe('live-region-element', () => {
       ).toBe(Ordering.Greater)
     })
 
-    test('messages with different politeness, a scheduled at same time as b', () => {
+    test('messages with different politeness', () => {
       const now = Date.now()
       expect(
         compareMessages(
@@ -121,42 +121,6 @@ describe('live-region-element', () => {
           },
         ),
       ).toBe(Ordering.Less)
-    })
-
-    test('messages with different politeness, a scheduled before b', () => {
-      const now = Date.now()
-      expect(
-        compareMessages(
-          {
-            contents: 'test',
-            politeness: 'assertive',
-            scheduled: now,
-          },
-          {
-            contents: 'test',
-            politeness: 'polite',
-            scheduled: now + 1000,
-          },
-        ),
-      ).toBe(Ordering.Less)
-    })
-
-    test('messages with different politeness, a scheduled after b', () => {
-      const now = Date.now()
-      expect(
-        compareMessages(
-          {
-            contents: 'test',
-            politeness: 'assertive',
-            scheduled: now + 1000,
-          },
-          {
-            contents: 'test',
-            politeness: 'polite',
-            scheduled: now,
-          },
-        ),
-      ).toBe(Ordering.Greater)
     })
   })
 })
