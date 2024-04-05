@@ -1,5 +1,15 @@
 # @primer/live-region-element
 
+## 0.6.0
+
+### Minor Changes
+
+- 4fbbc8e: Update delayMs to only work with politeness="polite"
+
+### Patch Changes
+
+- e2c8e1f: Update default throttle delay for announcements from 500ms to 150ms.
+
 ## 0.5.1
 
 ### Patch Changes
