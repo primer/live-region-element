@@ -3,24 +3,29 @@ import {Ordering, type Order} from './order'
 
 type Politeness = 'polite' | 'assertive'
 
-type AnnounceOptions = {
-  /**
-   * A delay in milliseconds to wait before announcing a message.
-   */
-  delayMs?: number
+type AnnounceOptions =
+  | {
+      /**
+       * The politeness level for a message.
+       *
+       * Note: a politeness level of `assertive` should only be used for
+       * time-sensistive or critical notifications that absolutely require the
+       * user's immediate attention
+       *
+       * @see https://www.w3.org/TR/wai-aria/#aria-live
+       * @see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions
+       */
+      politeness?: 'assertive'
 
-  /**
-   * The politeness level for a message.
-   *
-   * Note: a politeness level of `assertive` should only be used for
-   * time-sensistive or critical notifications that absolutely require the
-   * user's immediate attention
-   *
-   * @see https://www.w3.org/TR/wai-aria/#aria-live
-   * @see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions
-   */
-  politeness?: Politeness
-}
+      /**
+       * A delay in milliseconds to wait before announcing a message.
+       */
+      delayMs?: never
+    }
+  | {
+      politeness?: 'polite'
+      delayMs?: number
+    }
 
 type Message = {
   contents: string
@@ -262,33 +267,14 @@ export function compareMessages(a: Message, b: Message): Order {
     return Ordering.Greater
   }
 
-  // Only prioritize assertive messages if they are scheduled at the same time,
-  // or before
+  // Assertive messages have no delay and should always have priority over
+  // non-assertive messages
   if (a.politeness === 'assertive' && b.politeness !== 'assertive') {
-    if (a.scheduled === b.scheduled) {
-      return Ordering.Less
-    }
-
-    if (a.scheduled < b.scheduled) {
-      return Ordering.Less
-    }
-
-    return Ordering.Greater
+    return Ordering.Less
   }
 
   if (a.politeness !== 'assertive' && b.politeness === 'assertive') {
-    // Schedule a after b
-    if (a.scheduled === b.scheduled) {
-      return Ordering.Greater
-    }
-
-    // Schedule a after b
-    if (a.scheduled > b.scheduled) {
-      return Ordering.Greater
-    }
-
-    // Schedule a before b
-    return Ordering.Less
+    return Ordering.Greater
   }
 
   return Ordering.Equal
