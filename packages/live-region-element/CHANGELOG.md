@@ -1,5 +1,11 @@
 # @primer/live-region-element
 
+## 0.6.1
+
+### Patch Changes
+
+- f845f45: Update the CommonJS bundles emitted to inline ESM-only dependencies
+
 ## 0.6.0
 
 ### Minor Changes
