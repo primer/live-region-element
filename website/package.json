@@ -12,12 +12,12 @@
     "@primer/live-region-element": "^0.6.1",
     "a11y-dialog": "^8.0.4",
     "next": "^14.2.1",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "@types/react": "^18.2.74",
+    "@types/react": "^18.3.1",
     "cross-env": "^7.0.3",
     "rimraf": "^5.0.5",
     "typescript": "^5.4.4"
