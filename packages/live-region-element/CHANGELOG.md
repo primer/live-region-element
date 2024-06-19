@@ -1,5 +1,12 @@
 # @primer/live-region-element
 
+## 0.7.0
+
+### Minor Changes
+
+- 2e1d6ab: Add support for waiting for announcement completion by returning a promise from announce, announceFromElement
+- 2e1d6ab: Add support for dynamically inserting live regions while still announcing to screen readers
+
 ## 0.6.1
 
 ### Patch Changes
