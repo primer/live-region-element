@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, github/no-then */
+
 export class Deferred<T = void> implements Promise<T> {
   [Symbol.toStringTag] = 'Deferred'
 
