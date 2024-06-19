@@ -1,18 +1,21 @@
-import {afterEach, beforeEach, describe, test, expect} from 'vitest'
+import {afterEach, beforeEach, describe, test, expect, vi} from 'vitest'
 import {LiveRegionElement, compareMessages} from '../live-region-element'
 import {Ordering} from '../order'
+import {Deferred} from '../Deferred'
 import '../define'
 
 describe('live-region-element', () => {
   let liveRegion: LiveRegionElement
 
   beforeEach(() => {
+    vi.useFakeTimers()
     liveRegion = document.createElement('live-region') as LiveRegionElement
     document.body.appendChild(liveRegion)
   })
 
   afterEach(() => {
     document.body.removeChild(liveRegion)
+    vi.restoreAllMocks()
   })
 
   test('announce() message', () => {
@@ -31,6 +34,51 @@ describe('live-region-element', () => {
     })
     expect(liveRegion.getMessage('polite')).toBe('')
     expect(liveRegion.getMessage('assertive')).toBe('test')
+  })
+
+  test('announce() with delayMs', () => {
+    liveRegion.announce('test', {
+      delayMs: 1000,
+    })
+    expect(liveRegion.getMessage('polite')).toBe('')
+    vi.runAllTimers()
+    expect(liveRegion.getMessage('polite')).toBe('test')
+  })
+
+  test('cancel announce() with delayMs', () => {
+    const {cancel} = liveRegion.announce('test', {
+      delayMs: 1000,
+    })
+    expect(liveRegion.getMessage('polite')).toBe('')
+
+    cancel()
+    vi.runAllTimers()
+
+    expect(liveRegion.getMessage('polite')).toBe('')
+  })
+
+  test('await announce()', async () => {
+    const announcement = liveRegion.announce('test', {
+      delayMs: 1000,
+    })
+    expect(liveRegion.getMessage('polite')).toBe('')
+
+    vi.runAllTimers()
+    await announcement
+    expect(liveRegion.getMessage('polite')).toBe('test')
+  })
+
+  test('cancel await announce()', async () => {
+    const announcement = liveRegion.announce('test', {
+      delayMs: 1000,
+    })
+    expect(liveRegion.getMessage('polite')).toBe('')
+
+    vi.advanceTimersByTime(500)
+    announcement.cancel()
+    vi.runAllTimers()
+    await announcement
+    expect(liveRegion.getMessage('polite')).toBe('')
   })
 
   test('announceFromElement()', () => {
@@ -59,11 +107,13 @@ describe('live-region-element', () => {
             contents: 'test',
             politeness: 'polite',
             scheduled: now,
+            deferred: new Deferred(),
           },
           {
             contents: 'test',
             politeness: 'polite',
             scheduled: now,
+            deferred: new Deferred(),
           },
         ),
       ).toBe(Ordering.Equal)
@@ -77,11 +127,13 @@ describe('live-region-element', () => {
             contents: 'test',
             politeness: 'polite',
             scheduled: now,
+            deferred: new Deferred(),
           },
           {
             contents: 'test',
             politeness: 'polite',
             scheduled: now + 1000,
+            deferred: new Deferred(),
           },
         ),
       ).toBe(Ordering.Less)
@@ -95,11 +147,13 @@ describe('live-region-element', () => {
             contents: 'test',
             politeness: 'polite',
             scheduled: now + 1000,
+            deferred: new Deferred(),
           },
           {
             contents: 'test',
             politeness: 'polite',
             scheduled: now,
+            deferred: new Deferred(),
           },
         ),
       ).toBe(Ordering.Greater)
@@ -113,11 +167,13 @@ describe('live-region-element', () => {
             contents: 'test',
             politeness: 'assertive',
             scheduled: now,
+            deferred: new Deferred(),
           },
           {
             contents: 'test',
             politeness: 'polite',
             scheduled: now,
+            deferred: new Deferred(),
           },
         ),
       ).toBe(Ordering.Less)

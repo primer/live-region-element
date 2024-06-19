@@ -1,5 +1,6 @@
 import {MinHeap} from './MinHeap'
 import {Ordering, type Order} from './order'
+import {Deferred} from './Deferred'
 
 type Politeness = 'polite' | 'assertive'
 
@@ -31,12 +32,16 @@ type Message = {
   contents: string
   politeness: Politeness
   scheduled: number
+  deferred: Deferred
 }
 
 /**
- * A function to cancel a scheduled message.
+ * A type that can be cancelled. Canceling will stop the action from completing
+ * if it has not already completed.
  */
-type Cancel = () => void
+type Cancelable<T> = T & {
+  cancel: () => void
+}
 
 /**
  * The default delay between messages being announced by the live region
@@ -98,18 +103,25 @@ class LiveRegionElement extends HTMLElement {
    * Announce a message using a live region with a corresponding politeness
    * level.
    */
-  public announce(message: string, options: AnnounceOptions = {}): Cancel {
+  public announce(message: string, options: AnnounceOptions = {}): Cancelable<Promise<void>> {
     const {delayMs, politeness = 'polite'} = options
     const now = Date.now()
+    const deferred = new Deferred()
     const item: Message = {
+      deferred,
       politeness,
       contents: message,
       scheduled: delayMs !== undefined ? now + delayMs : now,
     }
     this.#queue.insert(item)
     this.#performWork()
-    return () => {
-      this.#queue.delete(item)
+
+    return {
+      ...deferred.getPromise(),
+      cancel: () => {
+        this.#queue.delete(item)
+        deferred.resolve()
+      },
     }
   }
 
@@ -117,12 +129,16 @@ class LiveRegionElement extends HTMLElement {
    * Announce a message using the text content of an element with a
    * corresponding politeness level
    */
-  public announceFromElement(element: HTMLElement, options?: AnnounceOptions): Cancel {
+  public announceFromElement(element: HTMLElement, options?: AnnounceOptions): Cancelable<Promise<void>> {
     const textContent = getTextContent(element)
     if (textContent !== '') {
       return this.announce(textContent, options)
     }
-    return noop
+    const promise = Promise.resolve()
+    return {
+      ...promise,
+      cancel: noop,
+    }
   }
 
   #performWork() {
@@ -150,14 +166,14 @@ class LiveRegionElement extends HTMLElement {
       return
     }
 
-    const timeout = message.scheduled > now ? message.scheduled - now : 0
+    const timeout = message.scheduled - now
     this.#timeoutId = window.setTimeout(() => {
       this.#timeoutId = null
       this.#performWork()
     }, timeout)
   }
 
-  getMessage(politeness: AnnounceOptions['politeness'] = 'polite') {
+  public getMessage(politeness: AnnounceOptions['politeness'] = 'polite') {
     const container = this.shadowRoot?.getElementById(politeness)
     if (!container) {
       throw new Error('Unable to find container for message')
@@ -170,7 +186,7 @@ class LiveRegionElement extends HTMLElement {
     // contents to trigger an announcement
     this.#pending = true
 
-    const {contents, politeness} = message
+    const {contents, deferred, politeness} = message
     const container = this.shadowRoot?.getElementById(politeness)
     if (!container) {
       this.#pending = false
@@ -187,14 +203,22 @@ class LiveRegionElement extends HTMLElement {
       clearTimeout(this.#timeoutId)
     }
 
+    deferred.resolve()
+
     // Wait the set delay amount before announcing the next message. This should
     // help to make sure that announcements are only made once every delay
     // amount.
-    this.#timeoutId = window.setTimeout(() => {
+    if (this.delay > 0) {
+      this.#timeoutId = window.setTimeout(() => {
+        this.#timeoutId = null
+        this.#pending = false
+        this.#performWork()
+      }, this.delay)
+    } else {
       this.#timeoutId = null
       this.#pending = false
       this.#performWork()
-    }, this.delay)
+    }
   }
 
   /**
@@ -283,4 +307,4 @@ export function compareMessages(a: Message, b: Message): Order {
 function noop() {}
 
 export {LiveRegionElement, templateContent}
-export type {AnnounceOptions}
+export type {AnnounceOptions, Cancelable}
