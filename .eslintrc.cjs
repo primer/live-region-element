@@ -29,6 +29,7 @@ const config = {
   rules: {
     'no-unused-vars': 'off',
     'import/no-unresolved': 'off',
+    'eslint-comments/no-use': 'off',
   },
   overrides: [
     {

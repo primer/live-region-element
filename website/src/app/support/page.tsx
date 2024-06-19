@@ -193,6 +193,41 @@ const expectations: Array<Expectation> = [
       },
     },
   },
+  {
+    expectation: 'Dynamically inserted live region',
+    description: 'A live region element that is dynamicaly inserted into a page shoud still announce a message',
+    testUrl: '/tests/dynamic-insert',
+    procedure: [
+      'Navigate to Example 1',
+      'Visit the button labelled "Make announcement"',
+      'Activate the button',
+      'Observe that the message "Dynamic announcement" was announced',
+      'Refresh the page',
+      'Navigate to Example 2',
+      'Visit the button labelled "Open dialog"',
+      'Activate the button',
+      'Visit the button labelled "Save"',
+      'Observe that the message "Dynamic announcement from dialog" was announced',
+    ],
+    results: {
+      jaws: {
+        chrome: true,
+        edge: true,
+        firefox: true,
+      },
+      nvda: {
+        chrome: true,
+        edge: true,
+        firefox: true,
+      },
+      voiceover_ios: {
+        safari: true,
+      },
+      voiceover_macos: {
+        safari: true,
+      },
+    },
+  },
 ]
 
 export default function SupportPage() {
