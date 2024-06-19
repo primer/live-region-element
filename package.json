@@ -18,14 +18,14 @@
     "type-check": "npm run type-check -ws --if-present"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.1",
+    "@changesets/cli": "^2.27.5",
     "@github/prettier-config": "^0.0.6",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",
-    "eslint-plugin-github": "^4.10.2",
+    "eslint-plugin-github": "^5.0.1",
     "prettier": "^3.2.5",
-    "rimraf": "^5.0.5",
+    "rimraf": "^5.0.7",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0",
     "vitest-dom": "^0.1.1"
