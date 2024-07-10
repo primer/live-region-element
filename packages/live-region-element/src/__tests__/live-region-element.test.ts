@@ -81,6 +81,22 @@ describe('live-region-element', () => {
     expect(liveRegion.getMessage('polite')).toBe('')
   })
 
+  test('queue announcements with announce()', async () => {
+    const delayMs = 150
+    liveRegion.delay = delayMs
+    liveRegion.announce('test1')
+    liveRegion.announce('test2')
+    liveRegion.announce('test3')
+
+    expect(liveRegion.getMessage('polite')).toBe('test1')
+
+    vi.advanceTimersByTime(delayMs)
+    expect(liveRegion.getMessage('polite')).toBe('test2')
+
+    vi.advanceTimersByTime(delayMs)
+    expect(liveRegion.getMessage('polite')).toBe('test3')
+  })
+
   test('announceFromElement()', () => {
     const element = document.createElement('div')
     element.textContent = 'test'
