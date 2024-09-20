@@ -195,4 +195,13 @@ describe('live-region-element', () => {
       ).toBe(Ordering.Less)
     })
   })
+
+  test('announce() after clear()', async () => {
+    liveRegion.announce('test1')
+    expect(liveRegion.getMessage('polite')).toBe('test1')
+
+    liveRegion.clear()
+    liveRegion.announce('test2')
+    expect(liveRegion.getMessage('polite')).toBe('test2')
+  })
 })
