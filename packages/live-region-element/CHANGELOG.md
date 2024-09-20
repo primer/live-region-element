@@ -1,5 +1,11 @@
 # @primer/live-region-element
 
+## 0.7.1
+
+### Patch Changes
+
+- 273ddb9: Fix race condition caused by calling `clear` immediately after `announce`
+
 ## 0.7.0
 
 ### Minor Changes
