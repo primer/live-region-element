@@ -197,16 +197,11 @@ describe('live-region-element', () => {
   })
 
   test('announce() after clear()', async () => {
-    const delayMs = 500
-
-    liveRegion.announce('test1', {delayMs})
-    vi.advanceTimersByTime(delayMs)
+    liveRegion.announce('test1')
     expect(liveRegion.getMessage('polite')).toBe('test1')
 
     liveRegion.clear()
-
-    liveRegion.announce('test2', {delayMs})
-    vi.advanceTimersByTime(delayMs)
+    liveRegion.announce('test2')
     expect(liveRegion.getMessage('polite')).toBe('test2')
   })
 })
