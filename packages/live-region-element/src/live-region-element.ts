@@ -229,6 +229,7 @@ class LiveRegionElement extends HTMLElement {
       clearTimeout(this.#timeoutId)
       this.#timeoutId = null
     }
+    this.#pending = false
     this.#queue.clear()
   }
 }
