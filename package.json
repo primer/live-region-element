@@ -18,7 +18,7 @@
     "type-check": "npm run type-check -ws --if-present"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.7",
+    "@changesets/cli": "^2.27.9",
     "@github/prettier-config": "^0.0.6",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
