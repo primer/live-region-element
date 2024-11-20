@@ -257,6 +257,7 @@ const templateContent = `
 :host {
   clip-path: inset(50%);
   height: 1px;
+  margin: -1px;
   overflow: hidden;
   position: absolute;
   white-space: nowrap;
@@ -264,7 +265,7 @@ const templateContent = `
 }
 </style>
 <div id="polite" aria-live="polite" aria-atomic="true"></div>
-<div id="assertive" aria-live="assertive" aria-atomic="true"></div>
+<div id="assertive" aria-live="assertive" aria-atomic="true" role="alert"></div>
 `
 
 function getTemplate() {
