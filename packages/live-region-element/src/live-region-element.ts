@@ -272,7 +272,7 @@ const templateContent = `
 }
 </style>
 <div id="polite" aria-live="polite" aria-atomic="true"></div>
-<div id="assertive" aria-live="assertive" aria-atomic="true" role="alert"></div>
+<div id="assertive" aria-live="assertive" aria-atomic="true"></div>
 `
 
 function getTemplate() {
