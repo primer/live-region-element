@@ -1,5 +1,11 @@
 # @primer/live-region-element
 
+## 0.7.2
+
+### Patch Changes
+
+- 4c1bf0a: Update visually hidden styles for `<live-region>` element
+
 ## 0.7.1
 
 ### Patch Changes
