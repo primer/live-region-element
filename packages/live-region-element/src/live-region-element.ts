@@ -252,12 +252,20 @@ function getTextContent(element: HTMLElement): string {
 
 let template: HTMLTemplateElement | null = null
 
+// The visually hidden styles here are based on the snippets from the following:
+// - https://www.scottohara.me/blog/2023/03/21/visually-hidden-hack.html
+// - https://benmyers.dev/blog/native-visually-hidden/
+// - https://adrianroselli.com/2020/01/my-priority-of-methods-for-labeling-a-control.html
 const templateContent = `
 <style>
 :host {
+  border: 0;
+  clip: rect(0 0 0 0);
   clip-path: inset(50%);
   height: 1px;
+  margin: -1px;
   overflow: hidden;
+  padding: 0;
   position: absolute;
   white-space: nowrap;
   width: 1px;
