@@ -10,6 +10,10 @@
         "import": "./dist/esm/index.d.ts",
         "require": "./dist/cjs/index.d.cts"
       },
+      "browser": {
+        "import": "./dist/esm/index.js",
+        "require": "./dist/cjs/index.cjs"
+      },
       "node": {
         "import": "./dist/esm/node/index.js",
         "require": "./dist/cjs/node/index.cjs"
