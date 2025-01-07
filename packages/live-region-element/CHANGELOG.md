@@ -1,5 +1,11 @@
 # @primer/live-region-element
 
+## 0.8.0
+
+### Minor Changes
+
+- 9c72551: Add export condition for browser for compatability with vitest
+
 ## 0.7.2
 
 ### Patch Changes
