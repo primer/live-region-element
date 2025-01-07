@@ -45,7 +45,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@lit-labs/ssr-dom-shim": "^1.2.0"
+    "@lit-labs/ssr-dom-shim": "^1.2.1"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.3",
