@@ -123,14 +123,19 @@ function findLiveRegion(from?: HTMLElement): LiveRegionElement | null {
   return null
 }
 
+const ariaModalSelector = '[aria-modal="true"][role="dialog"],[aria-modal="true"][role="alertdialog"]'
+
 function getClosestLiveRegion(from: HTMLElement): LiveRegionElement | null {
   const dialog = from.closest('dialog')
+  const ariaModal = from.closest(ariaModalSelector)
   let current: HTMLElement | null = from
 
   while ((current = current.parentElement)) {
     // If the element exists within a <dialog>, we can only use a live region
     // within that element
     if (dialog && !dialog.contains(current)) {
+      break
+    } else if (ariaModal && !ariaModal.contains(current)) {
       break
     }
 
@@ -152,6 +157,11 @@ function getLiveRegionContainer(from?: HTMLElement): HTMLElement {
     const dialog = from.closest('dialog')
     if (dialog) {
       container = dialog
+    }
+
+    const ariaModal = from.closest(ariaModalSelector)
+    if (ariaModal) {
+      container = ariaModal
     }
   }
   return container
