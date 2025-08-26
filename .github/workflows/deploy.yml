@@ -23,7 +23,7 @@ jobs:
         run: npm ci
       - name: Build project
         run: npm run build
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: ./website/out
 
