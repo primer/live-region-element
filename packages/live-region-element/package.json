@@ -51,7 +51,7 @@
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@rollup/plugin-inject": "^5.0.5",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-replace": "^6.0.2",
+    "@rollup/plugin-replace": "^6.0.3",
     "jsdom": "^26.1.0",
     "publint": "^0.3.12",
     "rimraf": "^6.0.1",
