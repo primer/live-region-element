@@ -239,9 +239,9 @@ function getTextContent(element: HTMLElement): string {
 
   if (element.hasAttribute('aria-label')) {
     value = element.getAttribute('aria-label')
-    // eslint-disable-next-line github/no-innerText
+     
   } else if (element.innerText) {
-    // eslint-disable-next-line github/no-innerText
+     
     value = element.innerText
   } else if (element.textContent) {
     value = element.textContent
@@ -280,7 +280,7 @@ function getTemplate() {
     return template
   }
   template = document.createElement('template')
-  // eslint-disable-next-line github/no-inner-html
+   
   template.innerHTML = templateContent
   return template
 }
