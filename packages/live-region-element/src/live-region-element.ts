@@ -239,9 +239,7 @@ function getTextContent(element: HTMLElement): string {
 
   if (element.hasAttribute('aria-label')) {
     value = element.getAttribute('aria-label')
-     
   } else if (element.innerText) {
-     
     value = element.innerText
   } else if (element.textContent) {
     value = element.textContent
@@ -280,7 +278,7 @@ function getTemplate() {
     return template
   }
   template = document.createElement('template')
-   
+
   template.innerHTML = templateContent
   return template
 }
