@@ -36,7 +36,7 @@ export function announce(message: string, options: GlobalAnnounceOptions = {}): 
     let cancel = () => {
       canceled = true
     }
-    // eslint-disable-next-line github/no-then
+
     const promise = wait(REGISTER_WAIT_MS).then(() => {
       if (!canceled) {
         const result = liveRegion!.announce(message, options)
@@ -82,7 +82,7 @@ export function announceFromElement(
     let cancel = () => {
       canceled = true
     }
-    // eslint-disable-next-line github/no-then
+
     const promise = wait(REGISTER_WAIT_MS).then(() => {
       if (!canceled) {
         const result = liveRegion!.announceFromElement(element, options)
