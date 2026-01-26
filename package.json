@@ -24,7 +24,7 @@
     "@typescript-eslint/parser": "^8.18.2",
     "eslint": "^9.39.2",
     "eslint-plugin-github": "^6.0.0",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.1",
     "rimraf": "^6.1.2",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4",
