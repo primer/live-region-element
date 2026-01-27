@@ -21,7 +21,7 @@
     "@changesets/cli": "^2.29.8",
     "@github/prettier-config": "^0.0.6",
     "@typescript-eslint/eslint-plugin": "^8.18.2",
-    "@typescript-eslint/parser": "^8.18.2",
+    "@typescript-eslint/parser": "^8.54.0",
     "eslint": "^9.39.2",
     "eslint-plugin-github": "^6.0.0",
     "prettier": "^3.8.1",
