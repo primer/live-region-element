@@ -1,7 +1,6 @@
 import js from '@eslint/js'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import tsparser from '@typescript-eslint/parser'
-import github from 'eslint-plugin-github'
 
 export default [
   {
@@ -12,7 +11,6 @@ export default [
     files: ['**/*.js', '**/*.ts', '**/*.tsx'],
     plugins: {
       '@typescript-eslint': tseslint,
-      github,
     },
     languageOptions: {
       parser: tsparser,
@@ -56,15 +54,11 @@ export default [
     rules: {
       ...tseslint.configs.recommended.rules,
       'no-unused-vars': 'off',
-      'import/no-unresolved': 'off',
-      'eslint-comments/no-use': 'off',
     },
   },
   {
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
-      'filenames/match-regex': 'off',
-      'import/no-namespace': 'off',
       '@typescript-eslint/no-namespace': 'off',
       '@typescript-eslint/array-type': 'off',
       '@typescript-eslint/no-unused-vars': [
@@ -77,10 +71,7 @@ export default [
   },
   {
     files: ['**/*.test.ts'],
-    rules: {
-      'github/no-inner-html': 'off',
-      'i18n-text/no-en': 'off',
-    },
+    rules: {},
   },
   {
     files: ['website/**/*.ts', 'website/**/*.tsx'],
@@ -90,8 +81,6 @@ export default [
         JSX: 'readonly',
       },
     },
-    rules: {
-      'i18n-text/no-en': 'off',
-    },
+    rules: {},
   },
 ]
