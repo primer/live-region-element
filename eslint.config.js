@@ -1,7 +1,6 @@
 import js from '@eslint/js'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import tsparser from '@typescript-eslint/parser'
-import github from 'eslint-plugin-github'
 
 export default [
   {
@@ -12,7 +11,6 @@ export default [
     files: ['**/*.js', '**/*.ts', '**/*.tsx'],
     plugins: {
       '@typescript-eslint': tseslint,
-      github,
     },
     languageOptions: {
       parser: tsparser,
@@ -76,22 +74,12 @@ export default [
     },
   },
   {
-    files: ['**/*.test.ts'],
-    rules: {
-      'github/no-inner-html': 'off',
-      'i18n-text/no-en': 'off',
-    },
-  },
-  {
     files: ['website/**/*.ts', 'website/**/*.tsx'],
     languageOptions: {
       globals: {
         React: 'readonly',
         JSX: 'readonly',
       },
-    },
-    rules: {
-      'i18n-text/no-en': 'off',
     },
   },
 ]

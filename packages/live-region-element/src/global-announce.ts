@@ -103,11 +103,9 @@ export function announceFromElement(
 }
 
 function findLiveRegion(from?: HTMLElement): LiveRegionElement | null {
-  let liveRegion: LiveRegionElement | null = null
-
   // If `from` is defined, try to find the closest `<live-region>` element
   // relative to the given element
-  liveRegion = from ? getClosestLiveRegion(from) : null
+  const liveRegion = from ? getClosestLiveRegion(from) : null
   if (liveRegion !== null) {
     return liveRegion
   }
@@ -115,9 +113,9 @@ function findLiveRegion(from?: HTMLElement): LiveRegionElement | null {
   // Otherwise, try to find any `<live-region>` element in the closest
   // container, either a <dialog> or the document body
   const container = getLiveRegionContainer(from)
-  liveRegion = container.querySelector('live-region')
-  if (liveRegion !== null) {
-    return liveRegion
+  const containerLiveRegion = container.querySelector('live-region')
+  if (containerLiveRegion !== null) {
+    return containerLiveRegion
   }
 
   return null
