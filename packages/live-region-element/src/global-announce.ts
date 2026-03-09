@@ -103,11 +103,9 @@ export function announceFromElement(
 }
 
 function findLiveRegion(from?: HTMLElement): LiveRegionElement | null {
-  let liveRegion: LiveRegionElement | null = null
-
   // If `from` is defined, try to find the closest `<live-region>` element
   // relative to the given element
-  liveRegion = from ? getClosestLiveRegion(from) : null
+  let liveRegion: LiveRegionElement | null = from ? getClosestLiveRegion(from) : null
   if (liveRegion !== null) {
     return liveRegion
   }
