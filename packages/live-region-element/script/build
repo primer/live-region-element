@@ -2,9 +2,11 @@
 
 npx rollup -c
 
-files=$(find ./dist/cjs -name '*.d.ts')
+# Generate TypeScript declarations explicitly
+npx tsc --project tsconfig.build.json --outDir dist/esm
 
-# Rename *.d.ts to *.d.cts for CommonJS
-for file in $files; do
-  mv -- "$file" "${file%.d.ts}.d.cts"
+# Copy ESM declarations to CJS and rename to .d.cts
+for file in $(find ./dist/esm -maxdepth 1 -name '*.d.ts'); do
+  basename=$(basename "$file")
+  cp "$file" "./dist/cjs/${basename%.d.ts}.d.cts"
 done
