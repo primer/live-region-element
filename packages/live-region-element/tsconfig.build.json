@@ -4,7 +4,8 @@
     "emitDeclarationOnly": true,
     "rootDir": "./src",
     "outDir": "dist",
-    "declaration": true
+    "declaration": true,
+    "types": ["node"]
   },
   "exclude": ["**/__tests__/**", "*.test.ts", "*.test.tsx", "vitest.config.ts", "vitest-setup.ts"]
 }
