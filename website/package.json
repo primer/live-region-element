@@ -11,7 +11,7 @@
   "dependencies": {
     "@primer/live-region-element": "^0.8.0",
     "a11y-dialog": "^8.1.5",
-    "next": "^16.2.1",
+    "next": "^16.2.3",
     "react": "^18.3.1",
     "react-dom": "^19.2.4"
   },
