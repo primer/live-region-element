@@ -25,7 +25,7 @@
     /* If your code runs in the DOM: */
     "lib": ["es2022", "dom", "dom.iterable"],
 
-    "types": ["vitest-dom/extend-expect"]
+    "types": ["vitest-dom/extend-expect", "node"]
   },
   "files": [],
   "include": []
