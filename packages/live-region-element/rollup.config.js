@@ -12,7 +12,7 @@ const external = ['@lit-labs/ssr-dom-shim']
  */
 const config = [
   {
-    input: ['./src/index.ts'],
+    input: ['./src/index.ts', './src/define.ts'],
     external,
     plugins: [nodeResolve(), typescript({tsconfig: 'tsconfig.build.json'}), esbuild()],
     output: {
@@ -21,7 +21,7 @@ const config = [
     },
   },
   {
-    input: ['./src/index.ts'],
+    input: ['./src/index.ts', './src/define.ts'],
     external: external.filter(dependency => {
       return ESM_ONLY.has(dependency) === false
     }),
@@ -33,7 +33,7 @@ const config = [
     },
   },
   {
-    input: ['./src/index.ts'],
+    input: ['./src/index.ts', './src/define.ts'],
     external,
     plugins: [
       nodeResolve(),
@@ -57,7 +57,7 @@ const config = [
     },
   },
   {
-    input: ['./src/index.ts'],
+    input: ['./src/index.ts', './src/define.ts'],
     external: external.filter(dependency => {
       return ESM_ONLY.has(dependency) === false
     }),
