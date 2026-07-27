@@ -13,7 +13,7 @@
     "a11y-dialog": "^8.1.5",
     "next": "^16.2.11",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
