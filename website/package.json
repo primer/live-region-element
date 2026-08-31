@@ -16,7 +16,7 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.4.0",
     "@types/react": "^19.2.18",
     "cross-env": "^10.1.0",
     "rimraf": "^6.1.3",
