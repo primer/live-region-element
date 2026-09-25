@@ -37,7 +37,7 @@ jobs:
         id: changesets
         uses: changesets/action@v2.1.2
         with:
-          title: Release tracking
-          publish: npm run release
+          pr-title: Release tracking
+          publish-script: npm run release
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
