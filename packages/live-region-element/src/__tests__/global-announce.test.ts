@@ -23,6 +23,55 @@ describe('Global announcements', () => {
       expect(liveRegion.getMessage('polite')).toBe('test')
     })
 
+    test('ignores a live region inside a closed dialog', () => {
+      document.body.innerHTML = `
+        <dialog>
+          <live-region id="closed-dialog-live-region"></live-region>
+        </dialog>
+        <live-region id="global-live-region"></live-region>
+      `
+
+      announce('test')
+
+      const closedDialogLiveRegion = document.getElementById('closed-dialog-live-region') as LiveRegionElement
+      expect(closedDialogLiveRegion.getMessage('polite')).toBe('')
+
+      const globalLiveRegion = document.getElementById('global-live-region') as LiveRegionElement
+      expect(globalLiveRegion.getMessage('polite')).toBe('test')
+    })
+
+    test('creates a live region when the only existing region is inside a closed dialog', () => {
+      document.body.innerHTML = `
+        <dialog>
+          <live-region id="closed-dialog-live-region"></live-region>
+        </dialog>
+      `
+
+      announce('test')
+
+      const closedDialogLiveRegion = document.getElementById('closed-dialog-live-region') as LiveRegionElement
+      expect(closedDialogLiveRegion.getMessage('polite')).toBe('')
+
+      const globalLiveRegion = document.querySelector('body > live-region') as LiveRegionElement
+      expect(globalLiveRegion.getMessage('polite')).toBe('test')
+    })
+
+    test('ignores a live region inside a closed dialog when provided with `from`', () => {
+      document.body.innerHTML = `
+        <dialog>
+          <live-region id="closed-dialog-live-region"></live-region>
+        </dialog>
+      `
+
+      const closedDialogLiveRegion = document.getElementById('closed-dialog-live-region') as LiveRegionElement
+      announce('test', {from: closedDialogLiveRegion})
+
+      expect(closedDialogLiveRegion.getMessage('polite')).toBe('')
+
+      const globalLiveRegion = document.querySelector('body > live-region') as LiveRegionElement
+      expect(globalLiveRegion.getMessage('polite')).toBe('test')
+    })
+
     test('announce() uses `polite` as default politeness', () => {
       announce('test')
       const liveRegion = document.querySelector('live-region') as LiveRegionElement
@@ -119,6 +168,25 @@ describe('Global announcements', () => {
       const liveRegion = document.querySelector('live-region') as LiveRegionElement
       expect(liveRegion.getMessage('polite')).toBe('')
       expect(liveRegion.getMessage('assertive')).toBe('test')
+    })
+
+    test('ignores a live region inside a closed dialog', () => {
+      document.body.innerHTML = `
+        <dialog>
+          <live-region id="closed-dialog-live-region"></live-region>
+        </dialog>
+        <live-region id="global-live-region"></live-region>
+      `
+      const element = document.createElement('div')
+      element.textContent = 'test'
+
+      announceFromElement(element)
+
+      const closedDialogLiveRegion = document.getElementById('closed-dialog-live-region') as LiveRegionElement
+      expect(closedDialogLiveRegion.getMessage('polite')).toBe('')
+
+      const globalLiveRegion = document.getElementById('global-live-region') as LiveRegionElement
+      expect(globalLiveRegion.getMessage('polite')).toBe('test')
     })
   })
 })

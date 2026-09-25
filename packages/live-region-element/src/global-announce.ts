@@ -107,7 +107,7 @@ function findLiveRegion(from?: HTMLElement): LiveRegionElement | null {
 
   // If `from` is defined, try to find the closest `<live-region>` element
   // relative to the given element
-  liveRegion = from ? getClosestLiveRegion(from) : null
+  liveRegion = from && !isInsideClosedDialog(from) ? getClosestLiveRegion(from) : null
   if (liveRegion !== null) {
     return liveRegion
   }
@@ -115,7 +115,10 @@ function findLiveRegion(from?: HTMLElement): LiveRegionElement | null {
   // Otherwise, try to find any `<live-region>` element in the closest
   // container, either a <dialog> or the document body
   const container = getLiveRegionContainer(from)
-  liveRegion = container.querySelector('live-region')
+  liveRegion =
+    Array.from(container.querySelectorAll<LiveRegionElement>('live-region')).find(
+      candidate => !isInsideClosedDialog(candidate),
+    ) ?? null
   if (liveRegion !== null) {
     return liveRegion
   }
@@ -150,11 +153,15 @@ function getLiveRegionContainer(from?: HTMLElement): HTMLElement {
   let container = document.body
   if (from) {
     const dialog = from.closest('dialog')
-    if (dialog) {
+    if (dialog?.open) {
       container = dialog
     }
   }
   return container
+}
+
+function isInsideClosedDialog(element: Element): boolean {
+  return element.closest('dialog:not([open])') !== null
 }
 
 /**
