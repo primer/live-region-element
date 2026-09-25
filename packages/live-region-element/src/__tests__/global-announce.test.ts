@@ -56,6 +56,22 @@ describe('Global announcements', () => {
       expect(globalLiveRegion.getMessage('polite')).toBe('test')
     })
 
+    test('ignores a live region inside a closed dialog when provided with `from`', () => {
+      document.body.innerHTML = `
+        <dialog>
+          <live-region id="closed-dialog-live-region"></live-region>
+        </dialog>
+      `
+
+      const closedDialogLiveRegion = document.getElementById('closed-dialog-live-region') as LiveRegionElement
+      announce('test', {from: closedDialogLiveRegion})
+
+      expect(closedDialogLiveRegion.getMessage('polite')).toBe('')
+
+      const globalLiveRegion = document.querySelector('body > live-region') as LiveRegionElement
+      expect(globalLiveRegion.getMessage('polite')).toBe('test')
+    })
+
     test('announce() uses `polite` as default politeness', () => {
       announce('test')
       const liveRegion = document.querySelector('live-region') as LiveRegionElement
