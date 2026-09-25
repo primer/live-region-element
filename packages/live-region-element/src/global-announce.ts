@@ -115,7 +115,10 @@ function findLiveRegion(from?: HTMLElement): LiveRegionElement | null {
   // Otherwise, try to find any `<live-region>` element in the closest
   // container, either a <dialog> or the document body
   const container = getLiveRegionContainer(from)
-  liveRegion = container.querySelector('live-region')
+  liveRegion =
+    Array.from(container.querySelectorAll<LiveRegionElement>('live-region')).find(
+      candidate => !candidate.closest('dialog:not([open])'),
+    ) ?? null
   if (liveRegion !== null) {
     return liveRegion
   }
