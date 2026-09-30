@@ -1,5 +1,11 @@
 # @primer/live-region-element
 
+## 0.8.1
+
+### Patch Changes
+
+- d985fcc: Ignore live regions inside closed dialogs when routing global announcements
+
 ## 0.8.0
 
 ### Minor Changes
