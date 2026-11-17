@@ -4,6 +4,38 @@ import {Ordering} from '../order'
 import {Deferred} from '../Deferred'
 import '../define'
 
+test('creates and announces from the shadow root when Trusted Types blocks HTML parsing', () => {
+  const innerHTMLDescriptor = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML')
+  expect(innerHTMLDescriptor?.set).toBeDefined()
+  Object.defineProperty(Element.prototype, 'innerHTML', {
+    ...innerHTMLDescriptor,
+    set() {
+      throw new TypeError('TrustedHTML required')
+    },
+  })
+
+  try {
+    const liveRegion = document.createElement('live-region') as LiveRegionElement
+    liveRegion.delay = 0
+
+    expect(liveRegion.shadowRoot?.querySelector('style')?.textContent).toContain('clip-path: inset(50%)')
+    expect(liveRegion.shadowRoot?.getElementById('polite')?.getAttribute('aria-live')).toBe('polite')
+    expect(liveRegion.shadowRoot?.getElementById('polite')?.getAttribute('aria-atomic')).toBe('true')
+    expect(liveRegion.shadowRoot?.getElementById('assertive')?.getAttribute('aria-live')).toBe('assertive')
+    expect(liveRegion.shadowRoot?.getElementById('assertive')?.getAttribute('aria-atomic')).toBe('true')
+
+    liveRegion.announce('polite announcement')
+    liveRegion.announce('assertive announcement', {politeness: 'assertive'})
+
+    expect(liveRegion.getMessage('polite')).toBe('polite announcement')
+    expect(liveRegion.getMessage('assertive')).toBe('assertive announcement')
+  } finally {
+    if (innerHTMLDescriptor) {
+      Object.defineProperty(Element.prototype, 'innerHTML', innerHTMLDescriptor)
+    }
+  }
+})
+
 describe('live-region-element', () => {
   let liveRegion: LiveRegionElement
 

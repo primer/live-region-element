@@ -254,8 +254,7 @@ let template: HTMLTemplateElement | null = null
 // - https://www.scottohara.me/blog/2023/03/21/visually-hidden-hack.html
 // - https://benmyers.dev/blog/native-visually-hidden/
 // - https://adrianroselli.com/2020/01/my-priority-of-methods-for-labeling-a-control.html
-const templateContent = `
-<style>
+const visuallyHiddenStyles = `
 :host {
   border: 0;
   clip: rect(0 0 0 0);
@@ -268,7 +267,10 @@ const templateContent = `
   white-space: nowrap;
   width: 1px;
 }
-</style>
+`
+
+const templateContent = `
+<style>${visuallyHiddenStyles}</style>
 <div id="polite" aria-live="polite" aria-atomic="true"></div>
 <div id="assertive" aria-live="assertive" aria-atomic="true"></div>
 `
@@ -279,7 +281,18 @@ function getTemplate() {
   }
   template = document.createElement('template')
 
-  template.innerHTML = templateContent
+  const style = document.createElement('style')
+  style.textContent = visuallyHiddenStyles
+  template.content.appendChild(style)
+
+  for (const politeness of ['polite', 'assertive'] as const) {
+    const container = document.createElement('div')
+    container.id = politeness
+    container.setAttribute('aria-live', politeness)
+    container.setAttribute('aria-atomic', 'true')
+    template.content.appendChild(container)
+  }
+
   return template
 }
 
