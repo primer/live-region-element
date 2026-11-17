@@ -2,4 +2,4 @@
 "@primer/live-region-element": patch
 ---
 
-Build the live-region template with DOM APIs so it works under Trusted Types enforcement.
+Avoid the `innerHTML` sink by building the live-region template with DOM APIs, keeping it compatible with Trusted Types enforcement.
