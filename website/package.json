@@ -9,7 +9,7 @@
     "type-check": "npx tsc --noEmit"
   },
   "dependencies": {
-    "@primer/live-region-element": "^0.8.1",
+    "@primer/live-region-element": "^0.8.2",
     "a11y-dialog": "^8.1.5",
     "next": "^16.4.6",
     "react": "^19.3.1",
