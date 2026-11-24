@@ -28,7 +28,7 @@
     "prettier": "^3.10.1",
     "rimraf": "^6.1.4",
     "typescript": "^6.0.3",
-    "vitest": "^5.1.0",
+    "vitest": "^5.1.1",
     "vitest-dom": "^0.1.1"
   },
   "overrides": {
